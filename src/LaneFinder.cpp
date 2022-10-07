@@ -135,14 +135,14 @@ Mat LaneFinder::score_pixels(const Mat &img) {
  */
 int LaneFinder::getCode(const string &str) {
   int code = COLOR_RGB2Lab;
-  
+
   if (str == "COLOR_RGB2LAB")
     code = COLOR_RGB2Lab;
   else if (str == "COLOR_RGB2HSV")
     code = COLOR_RGB2HSV;
   else if (str == "COLOR_RGB2HLS")
     code = COLOR_RGB2HLS;
-  
+
   return code;
 }
 
@@ -607,14 +607,17 @@ Mat LaneFinder::viz_windows(const Mat &score_img, int mode) {
 
 /**
  * @brief Take an undistorted dashboard camera image and highlights the lane.
- *  
+ *
  * @param undist_img An undistorted dashboard view image.
- * @param camera The DashboardCamera object for the camera the image was taken on.
- * @param left_fit_x the x values for the left line polynomial at the given y values
- * @param right_fit_x the x values for the right line polynomial at the given y values
+ * @param camera The DashboardCamera object for the camera the image was taken
+ * on.
+ * @param left_fit_x the x values for the left line polynomial at the given y
+ * values
+ * @param right_fit_x the x values for the right line polynomial at the given y
+ * values
  * @param fit_y the y values the left and right line x values were calculated at
  * @return Mat The undistorted image with the lane overlaid on top of it.
-*/
+ */
 Mat LaneFinder::viz_lane(const Mat &undist_img, const DashboardCamera &camera,
                          const vector<float> &left_fit_x,
                          const vector<float> &right_fit_x,

@@ -8,7 +8,6 @@
 #ifndef POLYNOMIALREGRESSION_H_
 #define POLYNOMIALREGRESSION_H_
 
-
 /**
  * PURPOSE:
  *
@@ -20,46 +19,36 @@
  *  the general polynomial regression model:
  *
  *  y = a0 + a1 * x + a2 * x^2 + ... + an * x^n
-  */
-#include<vector>
-#include<stdlib.h>
-
+ */
+#include <stdlib.h>
+#include <vector>
 
 namespace lane {
 
+template <class TYPE> class PolynomialRegression {
+public:
+  PolynomialRegression();
+  virtual ~PolynomialRegression(){};
 
-template <class TYPE>
-class PolynomialRegression {
-  public:
-
-    PolynomialRegression();
-    virtual ~PolynomialRegression(){};
-
-    bool fitIt(
-      const std::vector<TYPE> & x,
-      const std::vector<TYPE> & y,
-      const int &             order,
-      std::vector<TYPE> &     coeffs);
+  bool fitIt(const std::vector<TYPE> &x, const std::vector<TYPE> &y,
+             const int &order, std::vector<TYPE> &coeffs);
 };
 
-template <class TYPE>
-PolynomialRegression<TYPE>::PolynomialRegression() {};
+template <class TYPE> PolynomialRegression<TYPE>::PolynomialRegression(){};
 
 template <class TYPE>
-bool PolynomialRegression<TYPE>::fitIt(
-  const std::vector<TYPE> & x,
-  const std::vector<TYPE> & y,
-  const int &               order,
-  std::vector<TYPE> &       coeffs)
-{
+bool PolynomialRegression<TYPE>::fitIt(const std::vector<TYPE> &x,
+                                       const std::vector<TYPE> &y,
+                                       const int &order,
+                                       std::vector<TYPE> &coeffs) {
   // The size of xValues and yValues should be same
   if (x.size() != y.size()) {
-    throw std::runtime_error( "The size of x & y arrays are different" );
+    throw std::runtime_error("The size of x & y arrays are different");
     return false;
   }
   // The size of xValues and yValues cannot be 0, should not happen
   if (x.size() == 0 || y.size() == 0) {
-    throw std::runtime_error( "The size of x or y arrays is 0" );
+    throw std::runtime_error("The size of x or y arrays is 0");
     return false;
   }
 
@@ -82,7 +71,7 @@ bool PolynomialRegression<TYPE>::fitIt(
   std::vector<TYPE> a(np1);
 
   // B = normal augmented matrix that stores the equations.
-  std::vector<std::vector<TYPE> > B(np1, std::vector<TYPE> (np2, 0));
+  std::vector<std::vector<TYPE>> B(np1, std::vector<TYPE>(np2, 0));
 
   for (int i = 0; i <= n; ++i)
     for (int j = 0; j <= n; ++j)
@@ -93,7 +82,7 @@ bool PolynomialRegression<TYPE>::fitIt(
   for (int i = 0; i < np1; ++i) {
     Y[i] = (TYPE)0;
     for (unsigned int j = 0; j < N; ++j) {
-      Y[i] += (TYPE)pow(x[j], i)*y[j];
+      Y[i] += (TYPE)pow(x[j], i) * y[j];
     }
   }
 
@@ -102,11 +91,11 @@ bool PolynomialRegression<TYPE>::fitIt(
     B[i][np1] = Y[i];
 
   n += 1;
-  int nm1 = n-1;
+  int nm1 = n - 1;
 
   // Pivotisation of the B matrix.
   for (int i = 0; i < n; ++i)
-    for (int k = i+1; k < n; ++k)
+    for (int k = i + 1; k < n; ++k)
       if (B[i][i] < B[k][i])
         for (int j = 0; j <= n; ++j) {
           tmp = B[i][j];
@@ -117,23 +106,23 @@ bool PolynomialRegression<TYPE>::fitIt(
   // Performs the Gaussian elimination.
   // (1) Make all elements below the pivot equals to zero
   //     or eliminate the variable.
-  for (int i=0; i<nm1; ++i)
-    for (int k =i+1; k<n; ++k) {
+  for (int i = 0; i < nm1; ++i)
+    for (int k = i + 1; k < n; ++k) {
       TYPE t = B[k][i] / B[i][i];
-      for (int j=0; j<=n; ++j)
-        B[k][j] -= t*B[i][j];         // (1)
+      for (int j = 0; j <= n; ++j)
+        B[k][j] -= t * B[i][j]; // (1)
     }
 
   // Back substitution.
   // (1) Set the variable as the rhs of last equation
   // (2) Subtract all lhs values except the target coefficient.
   // (3) Divide rhs by coefficient of variable being calculated.
-  for (int i=nm1; i >= 0; --i) {
-    a[i] = B[i][n];                   // (1)
-    for (int j = 0; j<n; ++j)
+  for (int i = nm1; i >= 0; --i) {
+    a[i] = B[i][n]; // (1)
+    for (int j = 0; j < n; ++j)
       if (j != i)
-        a[i] -= B[i][j] * a[j];       // (2)
-    a[i] /= B[i][i];                  // (3)
+        a[i] -= B[i][j] * a[j]; // (2)
+    a[i] /= B[i][i];            // (3)
   }
 
   coeffs.resize(a.size());
@@ -143,7 +132,6 @@ bool PolynomialRegression<TYPE>::fitIt(
   return true;
 }
 
-}
-
+} // namespace lane
 
 #endif /* POLYNOMIALREGRESSION_H_ */

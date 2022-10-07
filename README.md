@@ -21,3 +21,6 @@ cmake ..
 cmake --build .
 ./laneTracking    
 ```
+5. folder structure
+
+

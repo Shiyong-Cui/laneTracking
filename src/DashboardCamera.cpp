@@ -106,7 +106,7 @@ void DashboardCamera::calibrate(vector<string> chessboard_img_fnames,
   double RMS = calibrateCamera(object_points, image_points, image_size,
                                m_camera_matrix, m_distortion_coeffs, rvecs,
                                tvecs); //,	cv::CALIB_ZERO_TANGENT_DIST |
-                                       //cv::CALIB_FIX_PRINCIPAL_POINT	);
+                                       // cv::CALIB_FIX_PRINCIPAL_POINT	);
 
   cout << "RMS error is " << RMS << endl;
 
